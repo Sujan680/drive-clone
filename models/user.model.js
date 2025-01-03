@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Create a schema for the user model 
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -26,6 +27,9 @@ const userSchema = new mongoose.Schema({
         minlength: [6, 'Password must be at least 6 characters long']
     }
 })
-
+ 
+// Create a model for the user schema 
 const user = mongoose.model('user', userSchema);
+
+// Export the user model to be used in the user.routes.js file
 module.exports = user;
