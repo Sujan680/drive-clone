@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
-const userModel = require('../models/user.model');
+const userModel = require("../models/user.model");
 
-const bcrypt = require('bcrypt');
+// Importing the bcrypt library
+const bcrypt = require("bcrypt");
 
-// /users/test
+// /users/test --> GET request to /test route
 router.get("/register", (req, res) => {
   res.render("register");
 });
@@ -24,9 +25,11 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array(), message: "Invalid data" });
+      return res
+        .status(400)
+        .json({ errors: errors.array(), message: "Invalid data" });
     }
-    const {username, email, password} = req.body;
+    const { username, email, password } = req.body;
 
     // Encrypt the password with bcrypt before saving it to the database
     const hashPassword = await bcrypt.hash(password, 10);
@@ -34,8 +37,8 @@ router.post(
     const newUser = await userModel.create({
       email,
       username,
-      password: hashPassword
-    })
+      password: hashPassword,
+    });
 
     // send the newly created user as a response in JSON format
     res.json(newUser);
