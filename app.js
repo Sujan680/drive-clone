@@ -3,7 +3,10 @@ const userRouter = require('./routes/user.routes');
 const dotenv = require('dotenv');
 dotenv.config();
 
+// importing the connectToDB function from the db.js file
 const connectToDB = require('./config/db');
+
+// calling the connectToDB function
 connectToDB();
 
 const app = express();  

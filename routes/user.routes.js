@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
+const userModel = require('../models/user.model');
+
+const bcrypt = require('bcrypt');
 
 // /users/test
 router.get("/register", (req, res) => {
@@ -18,12 +21,24 @@ router.post(
     .trim()
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters long"),
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array(), message: "Invalid data" });
     }
-    res.send(errors);
+    const {username, email, password} = req.body;
+
+    // Encrypt the password with bcrypt before saving it to the database
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await userModel.create({
+      email,
+      username,
+      password: hashPassword
+    })
+
+    // send the newly created user as a response in JSON format
+    res.json(newUser);
   }
 );
 
